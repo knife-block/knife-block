@@ -10,7 +10,6 @@ The premise is that you have a "block" in which you store all your "knives" and 
 
     gem install knife-block
 
-
 ### How does it work?
 
 Knife looks for knife.rb in ~/.chef - all this script does is create a symlink from the required configuration to knife.rb so that knife can act on the appropriate server.
@@ -44,6 +43,10 @@ Create a knife-<service_name>.rb configuration file in your ~/.chef directory fo
 
 
 These knife plugins are supplied without any warranty or guarantees regarding suitability for purpose.
+
+The code requires far more tests than the simple one that currently exists.
+
+Having said all of that, it works for us!
 
 Copyright: Green and Secure IT Limited 2012
 
