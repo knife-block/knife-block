@@ -88,7 +88,7 @@ module GreenAndSecure
     	    unless name_args.size == 1
     	    	@config_name = ui.ask_question("Please provide a friendly name for the new configuration file: ")
 	    end
-	    @chef_server = ui.ask_question("Please enter the url to your Chef Server (http://chef.domain.com:4000): ")
+	    @chef_server = ui.ask_question("Please enter the url to your Chef Server: ")
 	    require 'ohai'
 	    require 'chef/knife/configure'
 	    if File.exists?(chef_path+"/knife.rb") then
