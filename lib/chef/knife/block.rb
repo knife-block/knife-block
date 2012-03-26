@@ -87,7 +87,10 @@ module GreenAndSecure
     	    puts "This will create a new knife configuration file for you to use with knife-block"
     	    unless name_args.size == 1
     	    	@config_name = ui.ask_question("Please provide a friendly name for the new configuration file: ")
+	    else
+		@config_name = name_args.first
 	    end
+
 	    @chef_server = ui.ask_question("Please enter the url to your Chef Server: ")
 	    require 'ohai'
 	    require 'chef/knife/configure'
