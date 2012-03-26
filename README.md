@@ -6,6 +6,10 @@ The knife block plugin has been created to enable the use of multiple knife.rb f
 
 The premise is that you have a "block" in which you store all your "knives" and you can choose the one best suited to the task.
 
+## Installation
+
+    gem install knife-block
+
 
 ### How does it work?
 
@@ -16,8 +20,6 @@ Create a knife-<service_name>.rb configuration file in your ~/.chef directory fo
 **Please note - this script will check to see if knife.rb exists and whether it is a symlink or not.**
 
 **If knife.rb is *not* a symlink, the program will exit immediately and tell you what to do.**
-
-Copy the knifeblock.rb file into ~/.chef/plugins/knife and run one of the following commands:
 
 #### List all available servers
 (This command will also tell you which server is currently selected)
