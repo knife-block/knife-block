@@ -23,7 +23,7 @@ module GreenAndSecure
     	def run
 	    chef_path = Dir.home + "/.chef"
 	    ## get the list of available environments by searching ~/.chef for knife.rb files
-	    file_list = Dir.glob(chef_path+"/knife-*.rb")
+	    file_list = Dir.glob(chef_path+"/knife-*.rb").sort
 	    current_server = ""
 	    if File.exists?(chef_path+"/knife.rb") then
 		if !File.symlink?(chef_path+"/knife.rb") then
