@@ -6,6 +6,10 @@ The knife block plugin has been created to enable the use of multiple knife.rb f
 
 The premise is that you have a "block" in which you store all your "knives" and you can choose the one best suited to the task.
 
+## Requirements 
+
+At present, knife-block requires ruby 1.9.2 or above.  This is owing to the use of "Dir.home()" to find a user's home directory.
+
 ## Installation
 
     gem install knife-block
