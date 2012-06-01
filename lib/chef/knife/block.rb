@@ -87,12 +87,16 @@ module GreenAndSecure
 	    end
     	    list = GreenAndSecure::BlockList.new
 	    new_server = name_args.first
-	    if File.exists?(::Chef::Knife::chef_config_dir+"/knife.rb")
-		    File.unlink(::Chef::Knife::chef_config_dir+"/knife.rb")
-	    end
-	    File.symlink(::Chef::Knife::chef_config_dir+"/knife-#{new_server}.rb",
-                ::Chef::Knife::chef_config_dir+"/knife.rb")
-	    puts "The knife configuration has been updated to use #{new_server}"
+       if File.exists?(::Chef::Knife::chef_config_dir+"/knife-#{new_server}.rb")
+          if File.exists?(::Chef::Knife::chef_config_dir+"/knife.rb")
+             File.unlink(::Chef::Knife::chef_config_dir+"/knife.rb")
+          end
+          File.symlink(::Chef::Knife::chef_config_dir+"/knife-#{new_server}.rb",
+            ::Chef::Knife::chef_config_dir+"/knife.rb")
+          puts "The knife configuration has been updated to use #{new_server}"
+       else
+          puts "Knife configuration for #{new_server} not found, aborting switch"
+       end
 	end
     end
 
