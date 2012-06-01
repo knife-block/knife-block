@@ -87,7 +87,6 @@ module GreenAndSecure
 	    end
     	    list = GreenAndSecure::BlockList.new
 	    new_server = name_args.first
-	    ui.confirm("You are asking to change from #{list.current_server} to #{new_server}. Are you sure")
 	    if File.exists?(::Chef::Knife::chef_config_dir+"/knife.rb")
 		    File.unlink(::Chef::Knife::chef_config_dir+"/knife.rb")
 	    end
