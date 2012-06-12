@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Knife-block by greenandsecure</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Knife-block</h1>
+        <p>Create and use multiple knife.rb files in Chef</p>
+        <p class="view"><a href="https://github.com/greenandsecure/knife-block">View the Project on GitHub <small>greenandsecure/knife-block</small></a></p>
+        <ul>
+          <li><a href="https://github.com/greenandsecure/knife-block/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/greenandsecure/knife-block/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/greenandsecure/knife-block">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>Knife Block</h1>
+
+<p>Green and Secure IT Limited often have a need to work with multiple chef servers at the same time, be it due to testing/development/live scenarios or purely through working for a number of clients at once.</p>
+
+<p>The knife block plugin has been created to enable the use of multiple knife.rb files against multiple chef servers.</p>
+
+<p>The premise is that you have a "block" in which you store all your "knives" and you can choose the one best suited to the task.</p>
+
+<h2>Requirements</h2>
+
+<p>At present, knife-block requires ruby 1.9.2 or above.  This is owing to the use of "Dir.home()" to find a user's home directory.</p>
+
+<h2>Installation</h2>
+
+<pre><code>gem install knife-block
+</code></pre>
+
+<h3>How does it work?</h3>
+
+<p>Knife looks for knife.rb in ~/.chef - all this script does is create a symlink from the required configuration to knife.rb so that knife can act on the appropriate server.</p>
+
+<p>Create a knife-.rb configuration file in your ~/.chef directory for each Chef server that you wish to connect to. </p>
+
+<p><strong>Please note - this script will check to see if knife.rb exists and whether it is a symlink or not.</strong></p>
+
+<p><strong>If knife.rb is <em>not</em> a symlink, the program will exit immediately and tell you what to do.</strong></p>
+
+<h4>List all available servers</h4>
+
+<p>(This command will also tell you which server is currently selected)</p>
+
+<pre><code>knife block list
+
+The available chef servers are:
+    * local-testing [ Currently Selected ]
+    * opscode-hosted-chef
+</code></pre>
+
+<h4>Change to a new server</h4>
+
+<pre><code>knife block use &lt;server_name&gt;
+
+You are asking to change from local-testing to opscode-hosted-chef. Are you sure? (Y/N) y
+The knife configuration has been updated to use opscode-hosted-chef
+</code></pre>
+
+<h4>Create a new server</h4>
+
+<p>(Launches "knife configure" and creates $HOME/.chef/knife-.rb)</p>
+
+<pre><code>knife block new &lt;friendlyname&gt;
+</code></pre>
+
+<p>These knife plugins are supplied without any warranty or guarantees regarding suitability for purpose.</p>
+
+<p>The code requires far more tests than the simple one that currently exists.</p>
+
+<p>Having said all of that, it works for us!</p>
+
+<p>Copyright: Green and Secure IT Limited 2012</p>
+
+<p>License: Apache 2 (<a href="http://apache.org/licenses/LICENSE-2.0.html">http://apache.org/licenses/LICENSE-2.0.html</a>)</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/greenandsecure">greenandsecure</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
