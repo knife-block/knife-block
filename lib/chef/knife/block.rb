@@ -25,6 +25,7 @@ module GreenAndSecure
     class Block < Chef::Knife
     banner "knife block"
     	def run
+            GreenAndSecure::check_block_setup
     	    list = GreenAndSecure::BlockList.new
             if name_args.size == 1 and list.servers.include?(name_args[0])
     	        use = GreenAndSecure::BlockUse.new
@@ -63,6 +64,7 @@ module GreenAndSecure
 
     	# list the available environments
     	def run
+        GreenAndSecure::check_block_setup
 	    puts "The available chef servers are:"
 	    servers.each do |server|
 		if server == current_server then
