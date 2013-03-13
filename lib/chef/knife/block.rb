@@ -113,12 +113,15 @@ module GreenAndSecure
 	    end
 
 	    @chef_server = ui.ask_question("Please enter the url to your Chef Server: ")
+	    @client_name = ui.ask_question("Please enter the name of the Chef client: ")
 	    require 'ohai'
 	    require 'chef/knife/configure'
             GreenAndSecure::check_block_setup
 	    knife_config = Chef::Knife::Configure.new
 	    knife_config.config[:config_file] = "#{::Chef::Knife::chef_config_dir}/knife-#{@config_name}.rb"
 	    knife_config.config[:chef_server_url] = @chef_server
+	    knife_config.config[:node_name] = @client_name
+	    knife_config.config[:client_key] = "#{::Chef::Knife::chef_config_dir}/#{@client_name}-#{@config_name}.pem"
 	    knife_config.run
 	    puts "#{::Chef::Knife::chef_config_dir}/knife-#{@config_name}.rb has been sucessfully created"
 	    GreenAndSecure::BlockList.new.run
