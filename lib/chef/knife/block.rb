@@ -22,6 +22,12 @@ module GreenAndSecure
     end
     module_function :printable_server
 
+    # Returns path to berkshelf
+    def berkshelf_path
+      @berkshelf_path ||= ENV['BERKSHELF_PATH'] || File.expand_path('~/.berkshelf')
+    end
+    module_function :berkshelf_path
+
     class Block < Chef::Knife
     banner "knife block"
     	def run
@@ -46,7 +52,7 @@ module GreenAndSecure
         @current_server = nil
         def current_server
             GreenAndSecure::check_block_setup
-	
+
             @current_server ||= if File.exists?(::Chef::Knife::chef_config_dir+"/knife.rb") then
                     GreenAndSecure::printable_server(File.readlink(::Chef::Knife::chef_config_dir+"/knife.rb"))
                 else
@@ -96,6 +102,19 @@ module GreenAndSecure
           File.symlink(::Chef::Knife::chef_config_dir+"/knife-#{new_server}.rb",
             ::Chef::Knife::chef_config_dir+"/knife.rb")
           puts "The knife configuration has been updated to use #{new_server}"
+
+          # update berkshelf
+          berks = GreenAndSecure::berkshelf_path+"/config.json"
+          berks_new = GreenAndSecure::berkshelf_path+"/config-#{new_server}.json"
+          if File.exists?(berks_new)
+            if File.exists?(berks)
+              File.unlink(berks)
+            end
+            File.symlink(berks_new, berks)
+            puts "The berkshelf configuration has been updated to use #{new_server}"
+          else
+            puts "Berkshelf configuration for #{new_server} not found"
+          end
        else
           puts "Knife configuration for #{new_server} not found, aborting switch"
        end
