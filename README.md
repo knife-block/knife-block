@@ -6,7 +6,7 @@ The knife block plugin has been created to enable the use of multiple knife.rb f
 
 The premise is that you have a "block" in which you store all your "knives" and you can choose the one best suited to the task.
 
-## Requirements 
+## Requirements
 
 At present, knife-block requires ruby 1.9.2 or above.  This is owing to the use of "Dir.home()" to find a user's home directory.
 
@@ -18,7 +18,7 @@ At present, knife-block requires ruby 1.9.2 or above.  This is owing to the use 
 
 Knife looks for knife.rb in ~/.chef - all this script does is create a symlink from the required configuration to knife.rb so that knife can act on the appropriate server.
 
-Create a knife-<service_name>.rb configuration file in your ~/.chef directory for each Chef server that you wish to connect to. 
+Create a knife-<service_name>.rb configuration file in your ~/.chef directory for each Chef server that you wish to connect to.
 
 **Please note - this script will check to see if knife.rb exists and whether it is a symlink or not.**
 
@@ -28,14 +28,14 @@ Create a knife-<service_name>.rb configuration file in your ~/.chef directory fo
 (This command will also tell you which server is currently selected)
 
     knife block list
-    
+
     The available chef servers are:
         * local-testing [ Currently Selected ]
         * opscode-hosted-chef
 
 #### Change to a new server
     knife block use <server_name>
-    
+
     You are asking to change from local-testing to opscode-hosted-chef. Are you sure? (Y/N) y
     The knife configuration has been updated to use opscode-hosted-chef
 
@@ -44,6 +44,9 @@ Create a knife-<service_name>.rb configuration file in your ~/.chef directory fo
 
     knife block new <friendlyname>
 
+
+### Berkshelf integration
+Knife block supports Berkshelf, however, the berkshelf config files must be manually created and named "config-<block>.json" and put in the Berkshelf directory (typically ~/.berkshelf). In the future, these files could be automatically created by knife block.
 
 
 These knife plugins are supplied without any warranty or guarantees regarding suitability for purpose.
