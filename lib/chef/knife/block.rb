@@ -57,9 +57,9 @@ module GreenAndSecure
 
       @current_server ||= if File.exists?(::Chef::Knife::chef_config_dir+"/knife.rb") then
         GreenAndSecure::printable_server(File.readlink(::Chef::Knife::chef_config_dir+"/knife.rb"))
-          else
-            nil
-          end
+      else
+        nil
+      end
     end
 
     @servers = []
@@ -67,7 +67,7 @@ module GreenAndSecure
       ## get the list of available environments by searching ~/.chef for knife.rb files
       @servers ||= Dir.glob(::Chef::Knife::chef_config_dir+"/knife-*.rb").sort.map do | fn |
         GreenAndSecure::printable_server(fn)
-          end
+      end
     end
 
     # list the available environments
