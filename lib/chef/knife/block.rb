@@ -5,12 +5,31 @@
 #
 # Copyright (c) Matthew Macdonald-Wallace / Green and Secure IT Limited 2012
 #
+
+# Monkey patch ::Chef::Knife to give us back the config file, cause there's
+# no public method to actually use the lookup logic
+class Chef
+  class Knife
+    def get_config_file
+      locate_config_file if not config[:config_file]
+      File.dirname(config[:config_file])
+    end
+  end
+end
+
 module GreenAndSecure
+  @@knife = ::Chef::Knife.new
+  def chef_config_base
+    @@knife.get_config_file
+  end
+  module_function :chef_config_base
+
   def check_block_setup
-    if File.exists?(::Chef::Knife::chef_config_dir+"/knife.rb") then
-      if !File.symlink?(::Chef::Knife::chef_config_dir+"/knife.rb") then
-        puts "#{::Chef::Knife::chef_config_dir}/knife.rb is NOT a symlink."
-        puts "Please copy the file to #{::Chef::Knife::chef_config_dir}/knife-<servername>.rb and re-run this command."
+    base = GreenAndSecure::chef_config_base
+    if File.exists?(base+"/knife.rb") then
+      if !File.symlink?(base+"/knife.rb") then
+        puts "#{base}/knife.rb is NOT a symlink."
+        puts "Please copy the file to #{base}/knife-<servername>.rb and re-run this command."
         exit 3
       end
     end
@@ -55,8 +74,8 @@ module GreenAndSecure
     def current_server
       GreenAndSecure::check_block_setup
 
-      @current_server ||= if File.exists?(::Chef::Knife::chef_config_dir+"/knife.rb") then
-        GreenAndSecure::printable_server(File.readlink(::Chef::Knife::chef_config_dir+"/knife.rb"))
+      @current_server ||= if File.exists?(GreenAndSecure::chef_config_base+"/knife.rb") then
+        GreenAndSecure::printable_server(File.readlink(GreenAndSecure::chef_config_base+"/knife.rb"))
       else
         nil
       end
@@ -65,7 +84,7 @@ module GreenAndSecure
     @servers = []
     def servers
       ## get the list of available environments by searching ~/.chef for knife.rb files
-      @servers ||= Dir.glob(::Chef::Knife::chef_config_dir+"/knife-*.rb").sort.map do | fn |
+      @servers ||= Dir.glob(GreenAndSecure::chef_config_base+"/knife-*.rb").sort.map do | fn |
         GreenAndSecure::printable_server(fn)
       end
     end
@@ -98,12 +117,13 @@ module GreenAndSecure
       list = GreenAndSecure::BlockList.new
       new_server = name_args.first
 
-      if File.exists?(::Chef::Knife::chef_config_dir+"/knife-#{new_server}.rb")
-        if File.exists?(::Chef::Knife::chef_config_dir+"/knife.rb")
-          File.unlink(::Chef::Knife::chef_config_dir+"/knife.rb")
+      base = GreenAndSecure::chef_config_base
+      if File.exists?(base+"/knife-#{new_server}.rb")
+        if File.exists?(base+"/knife.rb")
+          File.unlink(base+"/knife.rb")
         end
-        File.symlink(::Chef::Knife::chef_config_dir+"/knife-#{new_server}.rb",
-          ::Chef::Knife::chef_config_dir+"/knife.rb")
+        File.symlink(base+"/knife-#{new_server}.rb",
+          base+"/knife.rb")
         puts "The knife configuration has been updated to use #{new_server}"
 
         # update berkshelf
@@ -144,13 +164,13 @@ module GreenAndSecure
 
       GreenAndSecure::check_block_setup
       knife_config = Chef::Knife::Configure.new
-      knife_config.config[:config_file] = "#{::Chef::Knife::chef_config_dir}/knife-#{@config_name}.rb"
+      knife_config.config[:config_file] = "#{GreenAndSecure::chef_config_base}/knife-#{@config_name}.rb"
       knife_config.config[:chef_server_url] = @chef_server
       knife_config.config[:node_name] = @client_name
-      knife_config.config[:client_key] = "#{::Chef::Knife::chef_config_dir}/#{@client_name}-#{@config_name}.pem"
+      knife_config.config[:client_key] = "#{GreenAndSecure::chef_config_base}/#{@client_name}-#{@config_name}.pem"
       knife_config.run
 
-      puts "#{::Chef::Knife::chef_config_dir}/knife-#{@config_name}.rb has been sucessfully created"
+      puts "#{GreenAndSecure::chef_config_base}/knife-#{@config_name}.rb has been sucessfully created"
       GreenAndSecure::BlockList.new.run
       use = GreenAndSecure::BlockUse.new
       use.name_args = [ @config_name ]
