@@ -14,4 +14,5 @@ Gem::Specification.new do |gem|
   gem.name          = "knife-block"
   gem.require_paths = ["lib"]
   gem.version       = Knife::Block::VERSION
+  gem.add_development_dependency 'rake'
 end
