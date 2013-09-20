@@ -4,7 +4,7 @@ require 'rake/testtask'
 
 
 desc "Run Unit Tests"
-Rake::TestTask.new("test") do |t|
+Rake::TestTask.new("default") do |t|
     t.pattern = "test/unit/*_test.rb"
     t.verbose = true
     t.warning = true
