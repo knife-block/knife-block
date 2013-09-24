@@ -12,7 +12,7 @@ class Chef
   class Knife
     def get_config_file
 
-      # get_config_file is only compatible with Chef 11
+      # locate_config_file is only compatible with Chef 11
       _chef11 = ::Chef::Version.new('11.0.0')
       if GreenAndSecure.current_chef_version >= _chef11
         locate_config_file if not config[:config_file]
@@ -61,7 +61,7 @@ module GreenAndSecure
       candidate_configs << File.join(ENV['HOME'], '.chef', 'knife.rb')
     end
 
-    candidate_configs.each do | candidate_config |
+    candidate_configs.each do |candidate_config|
       candidate_config = File.expand_path(candidate_config)
       if File.exist?(candidate_config)
         config[:config_file] = candidate_config
@@ -116,20 +116,22 @@ module GreenAndSecure
     banner "knife block list"
 
     @current_server = nil
+
     def current_server
       GreenAndSecure::check_block_setup
 
       @current_server ||= if File.exists?(GreenAndSecure::chef_config_base+"/knife.rb") then
-        GreenAndSecure::printable_server(File.readlink(GreenAndSecure::chef_config_base+"/knife.rb"))
-      else
-        nil
-      end
+                            GreenAndSecure::printable_server(File.readlink(GreenAndSecure::chef_config_base+"/knife.rb"))
+                          else
+                            nil
+                          end
     end
 
     @servers = []
+
     def servers
       ## get the list of available environments by searching ~/.chef for knife.rb files
-      @servers ||= Dir.glob(GreenAndSecure::chef_config_base+"/knife-*.rb").sort.map do | fn |
+      @servers ||= Dir.glob(GreenAndSecure::chef_config_base+"/knife-*.rb").sort.map do |fn|
         GreenAndSecure::printable_server(fn)
       end
     end
@@ -157,34 +159,39 @@ module GreenAndSecure
         puts "Please specify a server"
         server_list = GreenAndSecure::BlockList.new
         server_list.run
-      exit 1
+        exit 1
       end
+
       list = GreenAndSecure::BlockList.new
       new_server = name_args.first
 
       base = GreenAndSecure::chef_config_base
+
       if File.exists?(base+"/knife-#{new_server}.rb")
+
         if File.exists?(base+"/knife.rb")
           File.unlink(base+"/knife.rb")
         end
-        File.symlink(base+"/knife-#{new_server}.rb",
-          base+"/knife.rb")
+
+        File.symlink(base+"/knife-#{new_server}.rb", base+"/knife.rb")
         puts "The knife configuration has been updated to use #{new_server}"
 
         # update berkshelf
         berks = GreenAndSecure::berkshelf_path+"/config.json"
         berks_new = GreenAndSecure::berkshelf_path+"/config-#{new_server}.json"
         if File.exists?(berks_new)
+
           if File.exists?(berks)
             File.unlink(berks)
           end
+
           File.symlink(berks_new, berks)
-            puts "The berkshelf configuration has been updated to use #{new_server}"
-          else
-            puts "Berkshelf configuration for #{new_server} not found"
-          end
+          puts "The berkshelf configuration has been updated to use #{new_server}"
         else
-          puts "Knife configuration for #{new_server} not found, aborting switch"
+          puts "Berkshelf configuration for #{new_server} not found"
+        end
+      else
+        puts "Knife configuration for #{new_server} not found, aborting switch"
       end
     end
   end
@@ -218,7 +225,7 @@ module GreenAndSecure
       puts "#{GreenAndSecure::chef_config_base}/knife-#{@config_name}.rb has been sucessfully created"
       GreenAndSecure::BlockList.new.run
       use = GreenAndSecure::BlockUse.new
-      use.name_args = [ @config_name ]
+      use.name_args = [@config_name]
       use.run
     end
   end
