@@ -11,41 +11,86 @@
 class Chef
   class Knife
     def get_config_file
-      locate_config_file if not config[:config_file]
+
+      # get_config_file is only compatible with Chef 11
+      _chef11 = ::Chef::Version.new('11.0.0')
+      if GreenAndSecure.current_chef_version >= _chef11
+        locate_config_file if not config[:config_file]
+      else
+        GreenAndSecure.locate_config_file config
+      end
+
       File.dirname(config[:config_file])
     end
   end
 end
 
 module GreenAndSecure
+  @@current_chef_version = ::Chef::Version.new(::Chef::VERSION)
   @@knife = ::Chef::Knife.new
+
+  def current_chef_version
+    @@current_chef_version
+  end
+
   def chef_config_base
     @@knife.get_config_file
   end
-  module_function :chef_config_base
+
+  # Copied from chef/knife.rb
+  #
+  # Chef 11 defines `locate_config_file` in its chef/knife.rb but Chef 10
+  # has this snippet of code inlined in chef/knife.rb:configure_chef.
+  def locate_config_file(config)
+    candidate_configs = []
+
+    # Look for $KNIFE_HOME/knife.rb (allow multiple knives config on same machine)
+    if ENV['KNIFE_HOME']
+      candidate_configs << File.join(ENV['KNIFE_HOME'], 'knife.rb')
+    end
+    # Look for $PWD/knife.rb
+    if Dir.pwd
+      candidate_configs << File.join(Dir.pwd, 'knife.rb')
+    end
+    # Look for $UPWARD/.chef/knife.rb
+    if ::Chef::Knife.chef_config_dir
+      candidate_configs << File.join(::Chef::Knife.chef_config_dir, 'knife.rb')
+    end
+    # Look for $HOME/.chef/knife.rb
+    if ENV['HOME']
+      candidate_configs << File.join(ENV['HOME'], '.chef', 'knife.rb')
+    end
+
+    candidate_configs.each do | candidate_config |
+      candidate_config = File.expand_path(candidate_config)
+      if File.exist?(candidate_config)
+        config[:config_file] = candidate_config
+        break
+      end
+    end
+  end
 
   def check_block_setup
     base = GreenAndSecure::chef_config_base
     if File.exists?(base+"/knife.rb") then
-      if !File.symlink?(base+"/knife.rb") then
+      unless File.symlink?(base+"/knife.rb")
         puts "#{base}/knife.rb is NOT a symlink."
         puts "Please copy the file to #{base}/knife-<servername>.rb and re-run this command."
         exit 3
       end
     end
   end
-  module_function :check_block_setup
 
   def printable_server(server_config)
     File.basename(server_config, ".rb").split('-')[1 .. -1].join('-')
   end
-  module_function :printable_server
 
   # Returns path to berkshelf
   def berkshelf_path
     @berkshelf_path ||= ENV['BERKSHELF_PATH'] || File.expand_path('~/.berkshelf')
   end
-  module_function :berkshelf_path
+
+  extend self
 
   class Block < Chef::Knife
 
