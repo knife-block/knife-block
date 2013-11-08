@@ -15,7 +15,7 @@ class Chef
       # locate_config_file is only compatible with Chef 11
       _chef11 = ::Chef::Version.new('11.0.0')
       if GreenAndSecure.current_chef_version >= _chef11
-        locate_config_file if not config[:config_file]
+        config[:config_file] ||= ::Chef::Knife.locate_config_file
       else
         GreenAndSecure.locate_config_file config
       end
