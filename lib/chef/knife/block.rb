@@ -15,7 +15,7 @@ class Chef
       if GreenAndSecure.current_chef_version >= ::Chef::Version.new('11.8.0')
         config[:config_file] ||= ::Chef::Knife.locate_config_file
       elsif GreenAndSecure.current_chef_version >= ::Chef::Version.new('11.0.0')
-        config[:config_file] ||= locate_config_file
+        locate_config_file
       else
         GreenAndSecure.locate_config_file config
       end
