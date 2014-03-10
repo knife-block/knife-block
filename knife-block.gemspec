@@ -6,7 +6,8 @@ Gem::Specification.new do |gem|
   gem.email         = ["theprofessor@threedrunkensysadsonthe.net"]
   gem.description   = %q{Create and manage knife.rb files for OpsCodes' Chef}
   gem.summary       = %q{Create and manage knife.rb files for OpsCodes' Chef}
-  gem.homepage      = ""
+  gem.homepage      = "https://github.com/greenandsecure/knife-block"
+  gem.license       = "MIT"
 
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
