@@ -6,6 +6,8 @@
 # Copyright (c) Matthew Macdonald-Wallace / Green and Secure IT Limited 2012
 #
 
+require 'windows_redefine_file_symlink'
+
 # Monkey patch ::Chef::Knife to give us back the config file, cause there's
 # no public method to actually use the lookup logic
 class Chef
@@ -20,7 +22,7 @@ class Chef
         GreenAndSecure.locate_config_file config
       end
 
-      File.dirname(config[:config_file])
+      config[:config_file]
     end
   end
 end
@@ -34,7 +36,12 @@ module GreenAndSecure
   end
 
   def chef_config_base
-    @@knife.get_config_file
+    config_file = @@knife.get_config_file
+    if config_file
+      File.dirname(config_file)
+    else
+      Dir.home + "/.chef"
+    end
   end
 
   # Copied from chef/knife.rb
@@ -222,7 +229,7 @@ module GreenAndSecure
       knife_config.config[:client_key] = "#{GreenAndSecure::chef_config_base}/#{@client_name}-#{@config_name}.pem"
       knife_config.run
 
-      puts "#{GreenAndSecure::chef_config_base}/knife-#{@config_name}.rb has been sucessfully created"
+      puts "#{GreenAndSecure::chef_config_base}/knife-#{@config_name}.rb has been successfully created"
       GreenAndSecure::BlockList.new.run
       use = GreenAndSecure::BlockUse.new
       use.name_args = [@config_name]
