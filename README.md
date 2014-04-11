@@ -18,7 +18,7 @@ At present, knife-block requires ruby 1.9.2 or above.  This is owing to the use 
 
 Knife looks for knife.rb in ~/.chef - all this script does is create a symlink from the required configuration to knife.rb so that knife can act on the appropriate server.
 
-Create a knife-<service_name>.rb configuration file in your ~/.chef directory for each Chef server that you wish to connect to.
+Create a knife-&lt;service_name&gt;.rb configuration file in your ~/.chef directory for each Chef server that you wish to connect to.
 
 **Please note - this script will check to see if knife.rb exists and whether it is a symlink or not.**
 
@@ -40,13 +40,13 @@ Create a knife-<service_name>.rb configuration file in your ~/.chef directory fo
     The knife configuration has been updated to use opscode-hosted-chef
 
 #### Create a new server
-(Launches "knife configure" and creates $HOME/.chef/knife-<friendlyname>.rb)
+(Launches "knife configure" and creates $HOME/.chef/knife-&lt;friendlyname&gt;.rb)
 
     knife block new <friendlyname>
 
 
 ### Berkshelf integration
-Knife block supports Berkshelf, however, the berkshelf config files must be manually created and named "config-<block>.json" and put in the Berkshelf directory (typically ~/.berkshelf). In the future, these files could be automatically created by knife block.
+Knife block supports Berkshelf, however, the berkshelf config files must be manually created and named "config-&lt;block&gt;.json" and put in the Berkshelf directory (typically ~/.berkshelf). In the future, these files could be automatically created by knife block.
 
 
 These knife plugins are supplied without any warranty or guarantees regarding suitability for purpose.
