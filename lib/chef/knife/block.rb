@@ -12,9 +12,9 @@ class Chef
   class Knife
     def get_config_file
       # locate_config_file is only compatible with Chef 11
-      if GreenAndSecure.current_chef_version >= ::Chef::Version.new('11.8.0')
+      if GreenAndSecure.current_chef_version >= ::Gem::Version.new('11.8.0')
         config[:config_file] ||= ::Chef::Knife.locate_config_file
-      elsif GreenAndSecure.current_chef_version >= ::Chef::Version.new('11.0.0')
+      elsif GreenAndSecure.current_chef_version >= ::Gem::Version.new('11.0.0')
         locate_config_file
       else
         GreenAndSecure.locate_config_file config
@@ -26,7 +26,7 @@ class Chef
 end
 
 module GreenAndSecure
-  @@current_chef_version = ::Chef::Version.new(::Chef::VERSION)
+  @@current_chef_version = ::Gem::Version.new(::Chef::VERSION)
   @@knife = ::Chef::Knife.new
 
   def current_chef_version
