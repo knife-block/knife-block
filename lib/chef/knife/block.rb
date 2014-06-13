@@ -20,7 +20,8 @@ class Chef
         GreenAndSecure.locate_config_file config
       end
 
-      File.dirname(config[:config_file])
+      # if we haven't created our knife.rb yet, set defaults to ~/.chef so we can create the config.
+      config[:config_file] ? File.dirname(config[:config_file]) : File.join(ENV['HOME'], '.chef')
     end
   end
 end
