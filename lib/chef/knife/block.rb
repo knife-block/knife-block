@@ -223,7 +223,7 @@ module GreenAndSecure
       knife_config.config[:client_key] = "#{GreenAndSecure::chef_config_base}/#{@client_name}-#{@config_name}.pem"
       knife_config.run
 
-      puts "#{GreenAndSecure::chef_config_base}/knife-#{@config_name}.rb has been sucessfully created"
+      puts "#{GreenAndSecure::chef_config_base}/knife-#{@config_name}.rb has been successfully created"
       GreenAndSecure::BlockList.new.run
       use = GreenAndSecure::BlockUse.new
       use.name_args = [@config_name]
