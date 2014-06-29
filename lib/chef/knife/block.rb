@@ -230,5 +230,20 @@ module GreenAndSecure
       use.run
     end
   end
-end
 
+  # Shows the currently selected knife block
+  class BlockShow < Chef::Knife
+    banner "knife block show"
+
+    def run
+      GreenAndSecure::check_block_setup
+      list = GreenAndSecure::BlockList.new
+      list.servers.each do |server|
+        if server == list.current_server
+          STDOUT.write(server)
+          STDOUT.flush
+        end
+      end
+    end
+  end
+end
