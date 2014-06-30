@@ -238,12 +238,7 @@ module GreenAndSecure
     def run
       GreenAndSecure::check_block_setup
       list = GreenAndSecure::BlockList.new
-      list.servers.each do |server|
-        if server == list.current_server
-          STDOUT.write(server)
-          STDOUT.flush
-        end
-      end
+      puts list.current_server
     end
   end
 end
