@@ -230,5 +230,15 @@ module GreenAndSecure
       use.run
     end
   end
-end
 
+  # Shows the currently selected knife block
+  class BlockShow < Chef::Knife
+    banner "knife block show"
+
+    def run
+      GreenAndSecure::check_block_setup
+      list = GreenAndSecure::BlockList.new
+      puts list.current_server
+    end
+  end
+end
