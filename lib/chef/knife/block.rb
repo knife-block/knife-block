@@ -76,7 +76,7 @@ module GreenAndSecure
     if File.exists?(base+"/knife.rb") then
       unless File.symlink?(base+"/knife.rb")
         puts "#{base}/knife.rb is NOT a symlink."
-        puts "Please copy the file to #{base}/knife-<servername>.rb and re-run this command."
+        puts "Please move the file to #{base}/knife-<servername>.rb and re-run this command."
         exit 3
       end
     end
