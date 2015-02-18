@@ -35,7 +35,7 @@ class TestGreenAndSecureModule < Test::Unit::TestCase
   end
 
   def test_002_it_locates_a_knife_config
-    assert_match(/.*\/.chef\/knife\.rb/,@green.chef_config_base+"/knife.rb", "FAIL: knife.rb not found!")
+    assert_match(/.*\/.chef\/knife.rb/,@green.chef_config_base+"/.chef/knife.rb", "FAIL: knife.rb not found!")
   end
 
   def test_003_knife_rb_is_a_symlink
