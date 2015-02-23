@@ -12,7 +12,7 @@ At present, knife-block requires ruby 1.9.2 or above.  This is owing to the use 
 
 ## Installation
 
-    gem install knife-block
+    chef gem install knife-block
 
 ### How does it work?
 
