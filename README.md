@@ -55,6 +55,8 @@ The code requires far more tests than the simple one that currently exists.
 
 Having said all of that, it works for us!
 
-Copyright: Green and Secure IT Limited 2012
+Copyright:
+- Brandon Burton, 2015
+- Green and Secure IT Limited, 2012 - 2015
 
 License: Apache 2 (http://apache.org/licenses/LICENSE-2.0.html)
