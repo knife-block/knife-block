@@ -16,5 +16,6 @@ fi
 
 # Run our tests
 bundle install --jobs=3 --retry=3
+bundle exec rake rubocop
 bundle exec rake
 
