@@ -12,6 +12,12 @@ At present, knife-block requires ruby 1.9.2 or above.  This is owing to the use 
 
 ## Installation
 
+If you've installed Chef via rubygems, homebrew, etc, then install using
+
+    gem install knife-block
+
+If you've installed Chef via ChefDK, then install using
+
     chef gem install knife-block
 
 ### How does it work?
