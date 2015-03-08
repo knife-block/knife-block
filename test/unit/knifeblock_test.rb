@@ -18,15 +18,15 @@ class TestGreenAndSecureModule < Test::Unit::TestCase
     ENV['WORKSPACE'] ? (@chef_path ||= "#{ENV['WORKSPACE']}/.chef") : @chef_path = "#{ENV['HOME']}/.chef"
     if ENV['TRAVIS']
       @knife_ci = "#{@chef_path}/knife-ci.rb"
-      FileUtils.mkpath(@chef_path) unless File.exists?(@chef_path)
-      FileUtils.touch("#{@knife_ci}") unless File.exists?("#{@knife_ci}")
-      FileUtils.ln_s("#{@knife_ci}","#{@chef_path}/knife.rb") unless File.exists?("#{@chef_path}/knife.rb")
+      FileUtils.mkpath(@chef_path) unless File.exist?(@chef_path)
+      FileUtils.touch("#{@knife_ci}") unless File.exist?("#{@knife_ci}")
+      FileUtils.ln_s("#{@knife_ci}","#{@chef_path}/knife.rb") unless File.exist?("#{@chef_path}/knife.rb")
     end
   end
 
   def teardown
     if ENV['TRAVIS']
-      FileUtils.remove_entry_secure(@chef_path, force = true) if File.exists?(@chef_path)
+      FileUtils.remove_entry_secure(@chef_path, force = true) if File.exist?(@chef_path)
     end
   end
 
@@ -35,7 +35,7 @@ class TestGreenAndSecureModule < Test::Unit::TestCase
   end
 
   def test_002_it_locates_a_knife_config
-    assert_match(/.*\/.chef\/knife\.rb/,@green.chef_config_base+"/knife.rb", "FAIL: knife.rb not found!")
+    assert_match(/.*\/.chef\/knife.rb/,@green.chef_config_base+"/.chef/knife.rb", "FAIL: knife.rb not found!")
   end
 
   def test_003_knife_rb_is_a_symlink

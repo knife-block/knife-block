@@ -15,4 +15,6 @@ Gem::Specification.new do |gem|
   gem.name          = "knife-block"
   gem.require_paths = ["lib"]
   gem.version       = Knife::Block::VERSION
+
+  gem.add_dependency('test-unit', '~> 2.5')
 end

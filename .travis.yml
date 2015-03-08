@@ -10,5 +10,8 @@ matrix:
     - rvm: "2.1"
       env: CHEF_DK=false
     - rvm: "2.2"
+cache:
+  - bundler
+  - apt
 script:
   - ./bin/tests.sh $CHEF_DK
