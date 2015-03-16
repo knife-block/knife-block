@@ -2,11 +2,11 @@
 require File.expand_path('../lib/knife-block/version', __FILE__)
 
 Gem::Specification.new do |gem|
-  gem.authors       = ["proffalken"]
-  gem.email         = ["theprofessor@threedrunkensysadsonthe.net"]
+  gem.authors       = ["solarce"]
+  gem.email         = ["brandon@inatree.org"]
   gem.description   = %q{Create and manage knife.rb files for Chef}
   gem.summary       = %q{Create and manage knife.rb files for Chef}
-  gem.homepage      = "https://github.com/greenandsecure/knife-block"
+  gem.homepage      = "https://github.com/knife-block/knife-block"
   gem.license       = "MIT"
 
   gem.files         = `git ls-files`.split($\)

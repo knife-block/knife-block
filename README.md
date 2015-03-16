@@ -1,10 +1,10 @@
 # Knife Block
 
-Green and Secure IT Limited often have a need to work with multiple chef servers at the same time, be it due to testing/development/live scenarios or purely through working for a number of clients at once.
-
 The knife block plugin has been created to enable the use of multiple knife.rb files against multiple chef servers.
 
 The premise is that you have a "block" in which you store all your "knives" and you can choose the one best suited to the task.
+
+![Knife Block](/assets/knife-block.png)
 
 ## Requirements
 
