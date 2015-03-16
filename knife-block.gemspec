@@ -4,8 +4,8 @@ require File.expand_path('../lib/knife-block/version', __FILE__)
 Gem::Specification.new do |gem|
   gem.authors       = ["proffalken"]
   gem.email         = ["theprofessor@threedrunkensysadsonthe.net"]
-  gem.description   = %q{Create and manage knife.rb files for OpsCodes' Chef}
-  gem.summary       = %q{Create and manage knife.rb files for OpsCodes' Chef}
+  gem.description   = %q{Create and manage knife.rb files for Chef}
+  gem.summary       = %q{Create and manage knife.rb files for Chef}
   gem.homepage      = "https://github.com/greenandsecure/knife-block"
   gem.license       = "MIT"
 
