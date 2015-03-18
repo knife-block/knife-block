@@ -14,4 +14,4 @@ cache:
   - bundler
   - apt
 script:
-  - ./bin/tests.sh $CHEF_DK
+  - ./test/bin/tests.sh $CHEF_DK
