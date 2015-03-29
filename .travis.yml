@@ -1,3 +1,7 @@
+osx_image: beta-xcode6.2
+os:
+  - osx
+  - linux
 language: ruby
 before_install:
     - sudo apt-get update -qq
