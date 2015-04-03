@@ -12,14 +12,14 @@ class Chef
   class Knife
     def get_config_file
       case
-        when GreenAndSecure.current_chef_version >= ::Gem::Version.new('12.0.0')
-          config[:config_file] ||= ::Chef::Knife.config_loader.config_location
-        when ((GreenAndSecure.current_chef_version < ::Gem::Version.new('12.0.0')) && \
-          (GreenAndSecure.current_chef_version >= ::Gem::Version.new('11.8.0')))
-          config[:config_file] ||= ::Chef::Knife.locate_config_file
-        when GreenAndSecure.current_chef_version >= ::Gem::Version.new('11.0.0')
-          locate_config_file
-        else
+      when GreenAndSecure.current_chef_version >= ::Gem::Version.new('12.0.0')
+        config[:config_file] ||= ::Chef::Knife.config_loader.config_location
+      when ((GreenAndSecure.current_chef_version < ::Gem::Version.new('12.0.0')) && \
+        (GreenAndSecure.current_chef_version >= ::Gem::Version.new('11.8.0')))
+        config[:config_file] ||= ::Chef::Knife.locate_config_file
+      when GreenAndSecure.current_chef_version >= ::Gem::Version.new('11.0.0')
+        locate_config_file
+      else
         GreenAndSecure.locate_config_file config
       end
 
@@ -49,20 +49,13 @@ module GreenAndSecure
     candidate_configs = []
 
     # Look for $KNIFE_HOME/knife.rb (allow multiple knives config on same machine)
-    if ENV['KNIFE_HOME']
-      candidate_configs << File.join(ENV['KNIFE_HOME'], 'knife.rb')
-    end
     # Look for $PWD/knife.rb
-    if Dir.pwd
-      candidate_configs << File.join(Dir.pwd, 'knife.rb')
-    end
     # Look for $UPWARD/.chef/knife.rb
-    if ::Chef::Knife.chef_config_dir
-      candidate_configs << File.join(::Chef::Knife.chef_config_dir, 'knife.rb')
-    end
-    # Look for $HOME/.chef/knife.rb
-    if ENV['HOME']
-      candidate_configs << File.join(ENV['HOME'], '.chef', 'knife.rb')
+    # Look for $HOME/.chef/knife.rbi
+    knife_locations = [ENV['KNIFE_HOME'], Dir.pwd, ::Chef::Knife.chef_config_dir, File.join(ENV['HOME'], '.chef')]
+
+    knife_locations.each do |loc|
+      candidate_configs << File.join(loc, 'knife.rb')
     end
 
     candidate_configs.each do |candidate_config|
@@ -75,9 +68,9 @@ module GreenAndSecure
   end
 
   def check_block_setup
-    base = GreenAndSecure::chef_config_base
-    if File.exists?(base+"/knife.rb") then
-      unless File.symlink?(base+"/knife.rb")
+    base = GreenAndSecure.chef_config_base
+    if File.exist?(base + '/knife.rb')
+      unless File.symlink?(base + '/knife.rb')
         puts "#{base}/knife.rb is NOT a symlink."
         puts "Please move the file to #{base}/knife-<servername>.rb and re-run this command."
         exit 3
@@ -86,7 +79,7 @@ module GreenAndSecure
   end
 
   def printable_server(server_config)
-    File.basename(server_config, ".rb").split('-')[1 .. -1].join('-')
+    File.basename(server_config, '.rb').split('-')[1..-1].join('-')
   end
 
   # Returns path to berkshelf
@@ -97,13 +90,12 @@ module GreenAndSecure
   extend self
 
   class Block < Chef::Knife
-
-    banner "knife block"
+    banner 'knife block'
 
     def run
-      GreenAndSecure::check_block_setup
+      GreenAndSecure.check_block_setup
       list = GreenAndSecure::BlockList.new
-      if name_args.size == 1 and list.servers.include?(name_args[0])
+      if name_args.size == 1 && list.servers.include?(name_args[0])
         use = GreenAndSecure::BlockUse.new
         use.name_args = name_args
         use.run
@@ -116,16 +108,15 @@ module GreenAndSecure
   end
 
   class BlockList < Chef::Knife
-
-    banner "knife block list"
+    banner 'knife block list'
 
     @current_server = nil
 
     def current_server
-      GreenAndSecure::check_block_setup
+      GreenAndSecure.check_block_setup
 
-      @current_server ||= if File.exists?(GreenAndSecure::chef_config_base+"/knife.rb") then
-                            GreenAndSecure::printable_server(File.readlink(GreenAndSecure::chef_config_base+"/knife.rb"))
+      @current_server ||= if File.exist?(GreenAndSecure.chef_config_base + '/knife.rb')
+                            GreenAndSecure.printable_server(File.readlink(GreenAndSecure.chef_config_base + '/knife.rb'))
                           else
                             nil
                           end
@@ -135,17 +126,17 @@ module GreenAndSecure
 
     def servers
       ## get the list of available environments by searching ~/.chef for knife.rb files
-      @servers ||= Dir.glob(GreenAndSecure::chef_config_base+"/knife-*.rb").sort.map do |fn|
-        GreenAndSecure::printable_server(fn)
+      @servers ||= Dir.glob(GreenAndSecure.chef_config_base + '/knife-*.rb').sort.map do |fn|
+        GreenAndSecure.printable_server(fn)
       end
     end
 
     # list the available environments
     def run
-      GreenAndSecure::check_block_setup
-      puts "The available chef servers are:"
+      GreenAndSecure.check_block_setup
+      puts 'The available chef servers are:'
       servers.each do |server|
-        if server == current_server then
+        if server == current_server
           puts "\t* #{server} [ Currently Selected ]"
         else
           puts "\t* #{server}"
@@ -155,40 +146,30 @@ module GreenAndSecure
   end
 
   class BlockUse < Chef::Knife
-
-    banner "knife block use SERVERNAME"
+    banner 'knife block use SERVERNAME'
 
     def run
       unless name_args.size == 1
-        puts "Please specify a server"
+        puts 'Please specify a server'
         server_list = GreenAndSecure::BlockList.new
         server_list.run
         exit 1
       end
 
-      list = GreenAndSecure::BlockList.new
       new_server = name_args.first
+      base = GreenAndSecure.chef_config_base
 
-      base = GreenAndSecure::chef_config_base
-
-      if File.exists?(base+"/knife-#{new_server}.rb")
-
-        if File.exists?(base+"/knife.rb")
-          File.unlink(base+"/knife.rb")
-        end
-
-        File.symlink(base+"/knife-#{new_server}.rb", base+"/knife.rb")
+      if File.exist?(base + "/knife-#{new_server}.rb")
+        File.unlink(base + '/knife.rb') if File.exist?(base + '/knife.rb')
+        File.symlink(base + "/knife-#{new_server}.rb", base + '/knife.rb')
         puts "The knife configuration has been updated to use #{new_server}"
 
         # update berkshelf
-        berks = GreenAndSecure::berkshelf_path+"/config.json"
-        berks_new = GreenAndSecure::berkshelf_path+"/config-#{new_server}.json"
-        if File.exists?(berks_new)
+        berks = GreenAndSecure.berkshelf_path + '/config.json'
+        berks_new = GreenAndSecure.berkshelf_path + "/config-#{new_server}.json"
 
-          if File.exists?(berks)
-            File.unlink(berks)
-          end
-
+        if File.exist?(berks_new)
+          File.unlink(berks) if File.exist?(berks)
           File.symlink(berks_new, berks)
           puts "The berkshelf configuration has been updated to use #{new_server}"
         else
@@ -201,32 +182,31 @@ module GreenAndSecure
   end
 
   class BlockNew < Chef::Knife
-
-    banner "knife block new SERVERNAME"
+    banner 'knife block new SERVERNAME'
 
     def run
-      puts "This will create a new knife configuration file for you to use with knife-block"
-      unless name_args.size == 1
-        @config_name = ui.ask_question("Please provide a friendly name for the new configuration file: ")
-      else
+      puts 'This will create a new knife configuration file for you to use with knife-block'
+      if name_args.size == 1
         @config_name = name_args.first
+      else
+        @config_name = ui.ask_question('Please provide a friendly name for the new configuration file: ')
       end
 
-      @chef_server = ui.ask_question("Please enter the url to your Chef Server: ")
-      @client_name = ui.ask_question("Please enter the name of the Chef client: ")
+      @chef_server = ui.ask_question('Please enter the url to your Chef Server: ')
+      @client_name = ui.ask_question('Please enter the name of the Chef client: ')
 
       require 'ohai'
       require 'chef/knife/configure'
 
-      GreenAndSecure::check_block_setup
+      GreenAndSecure.check_block_setup
       knife_config = Chef::Knife::Configure.new
-      knife_config.config[:config_file] = "#{GreenAndSecure::chef_config_base}/knife-#{@config_name}.rb"
+      knife_config.config[:config_file] = "#{GreenAndSecure.chef_config_base}/knife-#{@config_name}.rb"
       knife_config.config[:chef_server_url] = @chef_server
       knife_config.config[:node_name] = @client_name
-      knife_config.config[:client_key] = "#{GreenAndSecure::chef_config_base}/#{@client_name}-#{@config_name}.pem"
+      knife_config.config[:client_key] = "#{GreenAndSecure.chef_config_base}/#{@client_name}-#{@config_name}.pem"
       knife_config.run
 
-      puts "#{GreenAndSecure::chef_config_base}/knife-#{@config_name}.rb has been successfully created"
+      puts "#{GreenAndSecure.chef_config_base}/knife-#{@config_name}.rb has been successfully created"
       GreenAndSecure::BlockList.new.run
       use = GreenAndSecure::BlockUse.new
       use.name_args = [@config_name]
@@ -236,10 +216,10 @@ module GreenAndSecure
 
   # Shows the currently selected knife block
   class BlockShow < Chef::Knife
-    banner "knife block show"
+    banner 'knife block show'
 
     def run
-      GreenAndSecure::check_block_setup
+      GreenAndSecure.check_block_setup
       list = GreenAndSecure::BlockList.new
       puts list.current_server
     end
