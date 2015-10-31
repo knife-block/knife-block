@@ -54,6 +54,18 @@ Create a knife-&lt;service_name&gt;.rb configuration file in your ~/.chef direct
 ### Berkshelf integration
 Knife block supports Berkshelf, however, the berkshelf config files must be manually created and named "config-&lt;block&gt;.json" and put in the Berkshelf directory (typically ~/.berkshelf). In the future, these files could be automatically created by knife block.
 
+Information about the Berkshelf configuration file options can be found at http://berkshelf.com/ in the 'Configuring Berkshelf' section.
+
+The general format of the config file looks something like this.
+
+    {
+      "chef":{
+          "chef_server_url":"<server_url>",
+          "client_key":"<path_to_chef_client_key>",
+          "node_name":"<chef_node_name>"
+        }
+    }
+
 
 These knife plugins are supplied without any warranty or guarantees regarding suitability for purpose.
 
