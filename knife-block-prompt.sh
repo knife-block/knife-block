@@ -26,6 +26,7 @@ _knife-block_ps1 () {
 	[ -z $knifesymlink ] && return $exit
 
 	#Extract current knife
+	[ -n "`$SHELL -c 'echo $ZSH_VERSION'`" ] && setopt KSH_ARRAYS BASH_REMATCH
 	[[ $knifesymlink =~ ${HOME}/\.chef/knife-(.*)\.rb ]]
 	currentknife=${BASH_REMATCH[1]}
 	
