@@ -8,6 +8,7 @@ Gem::Specification.new do |gem|
   gem.summary       = %q{Create and manage knife.rb files for Chef}
   gem.homepage      = "https://github.com/knife-block/knife-block"
   gem.license       = "MIT"
+  gem.required_ruby_version = ">= 1.9.2"
 
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
