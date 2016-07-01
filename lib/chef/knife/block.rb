@@ -94,6 +94,18 @@ module GreenAndSecure
     @berkshelf_path ||= ENV['BERKSHELF_PATH'] || File.expand_path('~/.berkshelf')
   end
 
+  def match_server_substr(base, server)
+    # short cicruit perfect match
+    return server if File.exists?(base+"/knife-#{server}.rb")
+
+    Dir["#{base}/knife-*.rb"].each do |fname|
+      found_server = fname[/knife-(.+).rb/,1]
+      return found_server if found_server.downcase.include?(server.downcase)
+    end
+
+    return false
+  end
+
   extend self
 
   class Block < Chef::Knife
@@ -167,11 +179,11 @@ module GreenAndSecure
       end
 
       list = GreenAndSecure::BlockList.new
-      new_server = name_args.first
-
       base = GreenAndSecure::chef_config_base
+      requested_server = name_args.first
+      new_server = GreenAndSecure::match_server_substr(base, requested_server)
 
-      if File.exists?(base+"/knife-#{new_server}.rb")
+      if new_server
 
         if File.exists?(base+"/knife.rb")
           File.unlink(base+"/knife.rb")
@@ -195,7 +207,7 @@ module GreenAndSecure
           puts "Berkshelf configuration for #{new_server} not found"
         end
       else
-        puts "Knife configuration for #{new_server} not found, aborting switch"
+        puts "Knife configuration for #{requested_server} not found, aborting switch"
       end
     end
   end
