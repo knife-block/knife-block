@@ -94,6 +94,11 @@ module GreenAndSecure
     @berkshelf_path ||= ENV['BERKSHELF_PATH'] || File.expand_path('~/.berkshelf')
   end
 
+# Returns path to aws credentials
+  def aws_creds
+    @aws_creds ||= ENV['AWS_CREDENTIAL_FILE'] || File.expand_path('~/.aws/credentials')
+  end
+
   extend self
 
   class Block < Chef::Knife
@@ -193,6 +198,21 @@ module GreenAndSecure
           puts "The berkshelf configuration has been updated to use #{new_server}"
         else
           puts "Berkshelf configuration for #{new_server} not found"
+        end
+
+        # update aws credentials
+        aws_creds = GreenAndSecure::aws_creds
+        aws_creds_new = GreenAndSecure::aws_creds+"-#{new_server}"
+        if File.exists?(aws_creds_new)
+
+          if File.exists?(aws_creds)
+            File.unlink(aws_creds)
+          end
+
+          File.symlink(aws_creds_new, aws_creds)
+          puts "The AWS credentials has been updated to use #{new_server}"
+        else
+          puts "AWS credentials for #{new_server} not found"
         end
       else
         puts "Knife configuration for #{new_server} not found, aborting switch"
